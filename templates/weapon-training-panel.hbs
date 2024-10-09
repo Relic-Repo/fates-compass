@@ -1,0 +1,13 @@
+<!-- templates/weapon-training-panel.hbs for Fate's Compass -->
+
+<div class="compass-list">
+  {{#each talents}}
+  <button class="compass-list-toggle" data-talent="{{@key}}">{{this.displayName}}</button>
+  {{/each}}
+</div>
+<div class="compass-talent-tree-panel" style="background: url('modules/fates-compass/image/talenttreebackgroundv11.png') no-repeat top center; background-size: 392px; background-position: top 0px center;">
+  {{#each talents}}
+  <div class="compass-talent-tree {{#if @first}}active{{/if}}" id="{{@key}}-tree">
+  </div>
+  {{/each}}
+</div>

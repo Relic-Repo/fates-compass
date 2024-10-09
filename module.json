@@ -1,0 +1,65 @@
+{
+  "id": "fates-compass",
+  "title": "Fate's Compass",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "11",
+    "verified": "11"
+  },
+  "authors": [
+    {
+      "name": "Author 1",
+      "discord": "Relic",
+      "email": "relic@relicraidng.gmail.com",
+      "flags": {}
+    }
+  ],
+  "esmodules": [
+    "src/main.js",
+    "src/node-racial-data.js",
+    "src/node-skills-data.js",
+    "src/node-specialization-data.js",
+    "src/node-weapon-training-data.js"
+  ],
+  "styles": [
+    "css/compass-styles.css"
+  ],
+  "packs": [
+    {
+      "name": "macro",
+      "label": "Macro",
+      "path": "packs/macro",
+      "type": "Macro",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "dnd5e",
+      "flags": {}
+    },
+    {
+      "name": "items",
+      "label": "Items",
+      "path": "packs/items",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "dnd5e",
+      "flags": {}
+    },
+    {
+      "name": "journal",
+      "label": "Journal",
+      "path": "packs/journal",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "dnd5e",
+      "flags": {}
+    }
+  ]
+}

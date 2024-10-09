@@ -1,0 +1,21 @@
+<!-- templates/compass-sheet.hbs for Fate's Compass -->
+
+<div class="tab" data-tab="fates-compass">
+  <div class="compass-fates-compass-container">
+    <div class="compass-header">
+      <h2>Fate's Compass</h2>
+      <div class="compass-icons">
+        {{#each icons as |icon|}}
+          <i class="{{icon.class}}" data-toggle="{{icon.toggle}}" data-title="{{this.title}}"></i>
+        {{/each}}
+        <div class="compass-points">
+          <i data-toggle="points" title="Talent Points"></i><span id="compass-points">{{points}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="compass-content">
+      <div id="list-toggles-section" class=".compass-section-list"></div>
+      <div id="talent-toggles-section" class=".compass-section-tree"></div>
+    </div>
+  </div>
+</div>
