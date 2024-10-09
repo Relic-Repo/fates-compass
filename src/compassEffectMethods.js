@@ -983,6 +983,71 @@ export const EFFECT_METHODS = {
     const newPrep = currentPrep + value;
     await actor.update({ "system.attributes.spellprep.max": newPrep });
   },
+  /**
+   * Initiates a token movement process on the canvas.
+   * @param {Actor5e} actor - The actor performing the movement.
+   * @param {TokenDocument} token - The actor's token.
+   * @param {number} maxDistance - The maximum allowed distance for the movement.
+   * @param {number} movement - The actor's movement speed.
+   * @param {string} actionType - The type of action being performed (e.g., "jump", "teleport").
+   * @param {Function} [additionalChecks] - Optional function for additional checks before movement.
+   * @returns {Promise<void>}
+   */
+  INITIATE_TOKEN_MOVEMENT: async function(actor, token, maxDistance, movement, actionType, additionalChecks) {
+    try {
+        canvas.app.view.style.cursor = "crosshair";
+
+        const onClickHandler = async (event) => {
+            try {
+                const mousePosition = event.data.getLocalPosition(canvas.app.stage);
+                const gridSize = canvas.grid.size;
+                const gridDistance = canvas.scene.grid.distance;
+                const targetX = Math.floor(mousePosition.x / gridSize) * gridSize;
+                const targetY = Math.floor(mousePosition.y / gridSize) * gridSize;
+
+                const distance = canvas.grid.measureDistance(token, { x: targetX, y: targetY });
+                const distanceFeet = distance * gridDistance;
+
+                const ray = new Ray(token.center, { x: targetX, y: targetY });
+                const collision = canvas.walls.checkCollision(ray);
+
+                if (collision) {
+                    ui.notifications.warn("Collision detected. Please choose another destination.");
+                    return;
+                }
+
+                if (distanceFeet > maxDistance) {
+                    ui.notifications.warn(`${actionType} distance (${distanceFeet} ft) exceeds maximum (${maxDistance} ft).`);
+                    return;
+                }
+
+                if (distanceFeet > movement) {
+                    ui.notifications.warn(`${actionType} distance (${distanceFeet} ft) exceeds your movement speed (${movement} ft).`);
+                    return;
+                }
+
+                if (additionalChecks && !(await additionalChecks(distanceFeet))) {
+                    return;
+                }
+
+                await token.document.update({ x: targetX, y: targetY });
+                await ChatMessage.create({
+                    content: `${actor.name} ${actionType}ed ${distanceFeet} feet.`,
+                    speaker: ChatMessage.getSpeaker({ actor: actor })
+                });
+
+                canvas.app.view.style.cursor = "default";
+                canvas.stage.off('pointerdown', onClickHandler);
+            } catch (error) {
+                console.error(`Error in ${actionType} placement handler`, error);
+            }
+        };
+
+        canvas.stage.on('pointerdown', onClickHandler);
+    } catch (error) {
+        console.error(`Error in INITIATE_TOKEN_MOVEMENT`, error);
+    }
+  },
 
   /**
    * Calculates the distance between two tokens.

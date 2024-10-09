@@ -1918,51 +1918,51 @@ const COMPASS_HANDLERS = {
 
     // Athletics Talents
     "jumper": {
-        /**
-         * Activates the Jumper talent for the specified actor.
-         * Adds the "Jump" feat to the actor's items.
-         * @param {Object} params - The parameters object.
-         * @param {Actor5e} params.actor - The actor activating the talent.
-         */
-        FC_ON_ACTIVATE: async ({ actor }) => {
-            try {
-                console.log("Jumper talent activated", actor);
-                await actor.setFlag(MODULE_NAME, 'jumper', true);
-                await EFFECT_METHODS.ADD_ITEM(actor, {
-                    itemData: {
-                        ...COMPASS_ITEMS.JUMP,
-                        flags: { [MODULE_NAME]: { sourceActorId: actor.id, module: MODULE_NAME } }
-                    }
-                });
-            } catch (error) {
-                console.error("Error activating Jumper talent", error);
-            }
-        },
+    /**
+     * Activates the Jumper talent for the specified actor.
+     * Adds the "Jump" feat to the actor's items.
+     * @param {Object} params - The parameters object.
+     * @param {Actor5e} params.actor - The actor activating the talent.
+     */
+    FC_ON_ACTIVATE: async ({ actor }) => {
+        try {
+            console.log("Jumper talent activated", actor);
+            await actor.setFlag(MODULE_NAME, 'jumper', true);
+            await EFFECT_METHODS.ADD_ITEM(actor, {
+                itemData: {
+                    ...COMPASS_ITEMS.JUMP,
+                    flags: { [MODULE_NAME]: { sourceActorId: actor.id, module: MODULE_NAME } }
+                }
+            });
+        } catch (error) {
+            console.error("Error activating Jumper talent", error);
+        }
+    },
 
-        /**
-         * Deactivates the Jumper talent for the specified actor.
-         * Removes the "Jump" feat from the actor's items.
-         * @param {Object} params - The parameters object.
-         * @param {Actor5e} params.actor - The actor deactivating the talent.
-         */
-        FC_ON_DEACTIVATE: async ({ actor }) => {
-            try {
-                console.log("Jumper talent deactivated", actor);
-                await actor.unsetFlag(MODULE_NAME, 'jumper');
-                await EFFECT_METHODS.REMOVE_ITEM(actor, { itemName: COMPASS_ITEMS.JUMP.name });
-            } catch (error) {
-                console.error("Error deactivating Jumper talent", error);
-            }
-        },        
+    /**
+     * Deactivates the Jumper talent for the specified actor.
+     * Removes the "Jump" feat from the actor's items.
+     * @param {Object} params - The parameters object.
+     * @param {Actor5e} params.actor - The actor deactivating the talent.
+     */
+    FC_ON_DEACTIVATE: async ({ actor }) => {
+        try {
+            console.log("Jumper talent deactivated", actor);
+            await actor.unsetFlag(MODULE_NAME, 'jumper');
+            await EFFECT_METHODS.REMOVE_ITEM(actor, { itemName: COMPASS_ITEMS.JUMP.name });
+        } catch (error) {
+            console.error("Error deactivating Jumper talent", error);
+        }
+    },        
 
-        /**
-         * Handles the usage of the "Jump" item by the actor.
-         * Opens a dialog to choose the type of jump.
-         * @param {Item5e} item - The item being used.
-         * @param {Actor5e} actor - The actor using the item.
-         */
-        onItemUse: async function (item, actor) {
-            try {
+    /**
+     * Handles the usage of the "Jump" item by the actor.
+     * Opens a dialog to choose the type of jump.
+     * @param {Item5e} item - The item being used.
+     * @param {Actor5e} actor - The actor using the item.
+     */
+    onItemUse: async function (item, actor) {
+        try {
             if (item.name !== "Jump") return;
             const token = actor.getActiveTokens()[0];
             if (!token) {
@@ -1976,23 +1976,23 @@ const COMPASS_HANDLERS = {
             const dialogContent = `<p>Choose the type of jump you want to perform:</p>`;
             const buttons = {
                 longJump: {
-                icon: '<i class="fas fa-arrows-alt-h"></i>',
-                label: "Long Jump",
-                callback: async () => {
-                    await this.performLongJump(actor, token, strengthScore, movement);
-                }
+                    icon: '<i class="fas fa-arrows-alt-h"></i>',
+                    label: "Long Jump",
+                    callback: async () => {
+                        await this.performLongJump(actor, token, strengthScore, movement);
+                    }
                 },
                 highJump: {
-                icon: '<i class="fas fa-arrows-alt-v"></i>',
-                label: "High Jump",
-                callback: async () => {
-                    await this.performHighJump(actor, token, strengthMod, movement);
-                }
+                    icon: '<i class="fas fa-arrows-alt-v"></i>',
+                    label: "High Jump",
+                    callback: async () => {
+                        await this.performHighJump(actor, token, strengthMod, movement);
+                    }
                 },
                 cancel: {
-                icon: '<i class="fas fa-times"></i>',
-                label: "Cancel",
-                callback: () => {}
+                    icon: '<i class="fas fa-times"></i>',
+                    label: "Cancel",
+                    callback: () => {}
                 }
             };
 
@@ -2002,21 +2002,21 @@ const COMPASS_HANDLERS = {
                 buttons: buttons,
                 default: "longJump"
             }).render(true);
-            } catch (error) {
+        } catch (error) {
             console.error("Error in onItemUse", error);
-            }
-        },
+        }
+    },
 
-        /**
-         * Performs a long jump for the actor.
-         * Opens a dialog to handle jump placement.
-         * @param {Actor5e} actor - The actor performing the jump.
-         * @param {TokenDocument} token - The actor's token.
-         * @param {number} strengthScore - The actor's Strength score.
-         * @param {number} movement - The actor's movement speed.
-         */
-        performLongJump: async function (actor, token, strengthScore, movement) {
-            try {
+    /**
+     * Performs a long jump for the actor.
+     * Opens a dialog to handle jump placement.
+     * @param {Actor5e} actor - The actor performing the jump.
+     * @param {TokenDocument} token - The actor's token.
+     * @param {number} strengthScore - The actor's Strength score.
+     * @param {number} movement - The actor's movement speed.
+     */
+    performLongJump: async function (actor, token, strengthScore, movement) {
+        try {
             const maxDistance = strengthScore;
             const dialogContent = `
                 <p>You can jump up to ${maxDistance} feet.</p>
@@ -2027,96 +2027,37 @@ const COMPASS_HANDLERS = {
                 title: "Long Jump",
                 content: dialogContent,
                 buttons: {
-                place: {
-                    icon: '<i class="fas fa-map-marker-alt"></i>',
-                    label: "Place",
-                    callback: () => {
-                    this.startLongJumpPlacement(actor, token, maxDistance, movement);
+                    place: {
+                        icon: '<i class="fas fa-map-marker-alt"></i>',
+                        label: "Place",
+                        callback: () => {
+                            EFFECT_METHODS.INITIATE_TOKEN_MOVEMENT(actor, token, maxDistance, movement, "jump");
+                        }
+                    },
+                    cancel: {
+                        icon: '<i class="fas fa-times"></i>',
+                        label: "Cancel",
+                        callback: () => {}
                     }
-                },
-                cancel: {
-                    icon: '<i class="fas fa-times"></i>',
-                    label: "Cancel",
-                    callback: () => {}
-                }
                 },
                 default: "place"
             });
             dialog.render(true);
-            } catch (error) {
+        } catch (error) {
             console.error("Error in performLongJump", error);
-            }
-        },
+        }
+    },
 
-        /**
-         * Initiates the placement process for a long jump.
-         * @param {Actor5e} actor - The actor performing the jump.
-         * @param {TokenDocument} token - The actor's token.
-         * @param {number} maxDistance - The maximum jump distance.
-         * @param {number} movement - The actor's movement speed.
-         */
-        startLongJumpPlacement: function (actor, token, maxDistance, movement) {
-            try {
-            canvas.app.view.style.cursor = "crosshair";
-
-            const onClickHandler = async (event) => {
-                try {
-                const mousePosition = event.data.getLocalPosition(canvas.app.stage);
-                const gridSize = canvas.grid.size;
-                const gridDistance = canvas.scene.grid.distance;
-                const targetX = Math.floor(mousePosition.x / gridSize) * gridSize;
-                const targetY = Math.floor(mousePosition.y / gridSize) * gridSize;
-
-                const distance = canvas.grid.measureDistance(token, { x: targetX, y: targetY });
-                const distanceFeet = distance * gridDistance;
-
-                const ray = new Ray(token.center, { x: targetX, y: targetY });
-                const collision = canvas.walls.checkCollision(ray);
-
-                if (collision) {
-                    ui.notifications.warn("Collision detected. Please choose another destination.");
-                    return;
-                }
-
-                if (distanceFeet > maxDistance) {
-                    ui.notifications.warn(`Jump distance (${distanceFeet} ft) exceeds maximum (${maxDistance} ft).`);
-                    return;
-                }
-
-                if (distanceFeet > movement) {
-                    ui.notifications.warn(`Jump distance (${distanceFeet} ft) exceeds your movement speed (${movement} ft).`);
-                    return;
-                }
-
-                await token.document.update({ x: targetX, y: targetY });
-                await ChatMessage.create({
-                    content: `${actor.name} jumped ${distanceFeet} feet.`,
-                    speaker: ChatMessage.getSpeaker({ actor: actor })
-                });
-
-                canvas.app.view.style.cursor = "default";
-                canvas.stage.off('pointerdown', onClickHandler);
-                } catch (error) {
-                console.error("Error in startLongJumpPlacement handler", error);
-                }
-            };
-
-            canvas.stage.on('pointerdown', onClickHandler);
-            } catch (error) {
-            console.error("Error in startLongJumpPlacement", error);
-            }
-        },
-
-        /**
-         * Performs a high jump for the actor.
-         * Opens a dialog to choose jump height and direction.
-         * @param {Actor5e} actor - The actor performing the jump.
-         * @param {TokenDocument} token - The actor's token.
-         * @param {number} strengthMod - The actor's Strength modifier.
-         * @param {number} movement - The actor's movement speed.
-         */
-        performHighJump: async function (actor, token, strengthMod, movement) {
-            try {
+    /**
+     * Performs a high jump for the actor.
+     * Opens a dialog to choose jump height and direction.
+     * @param {Actor5e} actor - The actor performing the jump.
+     * @param {TokenDocument} token - The actor's token.
+     * @param {number} strengthMod - The actor's Strength modifier.
+     * @param {number} movement - The actor's movement speed.
+     */
+    performHighJump: async function (actor, token, strengthMod, movement) {
+        try {
             const maxHeight = 3 + strengthMod;
             const dialogContent = `
                 <p>You can jump up to ${maxHeight} feet high.</p>
@@ -2128,37 +2069,37 @@ const COMPASS_HANDLERS = {
                 title: "High Jump",
                 content: dialogContent,
                 buttons: {
-                jump: {
-                    icon: '<i class="fas fa-check"></i>',
-                    label: "Jump",
-                    callback: async (html) => {
-                    const height = Math.min(parseInt(html.find('#jumpHeight').val()), maxHeight);
-                    await this.chooseHighJumpDirection(actor, token, height, movement);
+                    jump: {
+                        icon: '<i class="fas fa-check"></i>',
+                        label: "Jump",
+                        callback: async (html) => {
+                            const height = Math.min(parseInt(html.find('#jumpHeight').val()), maxHeight);
+                            await this.chooseHighJumpDirection(actor, token, height, movement);
+                        }
+                    },
+                    cancel: {
+                        icon: '<i class="fas fa-times"></i>',
+                        label: "Cancel",
+                        callback: () => {}
                     }
-                },
-                cancel: {
-                    icon: '<i class="fas fa-times"></i>',
-                    label: "Cancel",
-                    callback: () => {}
-                }
                 },
                 default: "jump"
             });
             dialog.render(true);
-            } catch (error) {
+        } catch (error) {
             console.error("Error in performHighJump", error);
-            }
-        },
+        }
+    },
 
-        /**
-         * Allows the actor to choose the direction for a high jump.
-         * @param {Actor5e} actor - The actor performing the jump.
-         * @param {TokenDocument} token - The actor's token.
-         * @param {number} height - The height of the jump.
-         * @param {number} movement - The actor's movement speed.
-         */
-        chooseHighJumpDirection: async function (actor, token, height, movement) {
-            try {
+    /**
+     * Allows the actor to choose the direction for a high jump.
+     * @param {Actor5e} actor - The actor performing the jump.
+     * @param {TokenDocument} token - The actor's token.
+     * @param {number} height - The height of the jump.
+     * @param {number} movement - The actor's movement speed.
+     */
+    chooseHighJumpDirection: async function (actor, token, height, movement) {
+        try {
             const directions = [
                 { label: "Up", x: 0, y: -1 },
                 { label: "Up-Right", x: 1, y: -1 },
@@ -2173,10 +2114,18 @@ const COMPASS_HANDLERS = {
 
             const directionButtons = directions.reduce((buttons, dir) => {
                 buttons[dir.label] = {
-                label: dir.label,
-                callback: async () => {
-                    await this.executeHighJump(actor, token, dir.x, dir.y, height, movement);
-                }
+                    label: dir.label,
+                    callback: async () => {
+                        const additionalChecks = async (distance) => {
+                            const totalMovement = distance + height;
+                            if (totalMovement > movement) {
+                                ui.notifications.warn("The jump distance exceeds your movement speed.");
+                                return false;
+                            }
+                            return true;
+                        };
+                        await EFFECT_METHODS.INITIATE_TOKEN_MOVEMENT(actor, token, 5, movement, "jump", additionalChecks);
+                    }
                 };
                 return buttons;
             }, {});
@@ -2187,51 +2136,11 @@ const COMPASS_HANDLERS = {
                 buttons: directionButtons,
                 default: "Vertical"
             }).render(true);
-            } catch (error) {
+        } catch (error) {
             console.error("Error in chooseHighJumpDirection", error);
-            }
-        },
-
-        /**
-         * Executes the high jump for the actor.
-         * @param {Actor5e} actor - The actor performing the jump.
-         * @param {TokenDocument} token - The actor's token.
-         * @param {number} dirX - The x-direction multiplier.
-         * @param {number} dirY - The y-direction multiplier.
-         * @param {number} height - The height of the jump.
-         * @param {number} movement - The actor's movement speed.
-         */
-        executeHighJump: async function (actor, token, dirX, dirY, height, movement) {
-            try {
-            const gridSize = canvas.grid.size;
-            const distance = (dirX !== 0 || dirY !== 0) ? 5 : 0; // Assuming 5 feet movement if moving horizontally
-            const totalMovement = distance + height;
-            if (totalMovement > movement) {
-                ui.notifications.warn("The jump distance exceeds your movement speed.");
-                return;
-            }
-
-            const newX = token.x + (dirX * gridSize);
-            const newY = token.y + (dirY * gridSize);
-
-            const ray = new Ray(token.center, { x: newX, y: newY });
-            const collision = canvas.walls.checkCollision(ray);
-
-            if (collision) {
-                ui.notifications.warn("Collision detected. Cannot complete the jump.");
-                return;
-            }
-
-            await token.document.update({ x: newX, y: newY });
-            await ChatMessage.create({
-                content: `${actor.name} jumps ${height} feet high${distance ? ` and moves ${distance} feet` : ''}.`,
-                speaker: ChatMessage.getSpeaker({ actor: actor })
-            });
-            } catch (error) {
-            console.error("Error in executeHighJump", error);
-            }
         }
-    },
+    }
+},
 
     "strapping": {
         FC_ON_ACTIVATE: async ({ actor }) => {
